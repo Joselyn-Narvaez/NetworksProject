@@ -28,7 +28,10 @@ public class TCPClient {
 			return;
 		}
 
-		// communicate with TCP server
+		// If connection successful, then the server will respond and the client will output 
+		System.out.println("FROM SERVER: " + inFromServer.readLine());
+
+		// communicate with TCP server for requests by client
 		while (true) {
 			try {
 				sentence = inFromUser.readLine();
@@ -43,8 +46,7 @@ public class TCPClient {
 					System.out.println("FROM SERVER: " + modifiedSentence);
 					clientSocket.close();
 					return;
-				} else {// handle any other request
-					// System.out.println("sending message to server: " + sentence + "\n");
+				} else {// handle any other request including math requests
 					outToServer.writeBytes(sentence + '\n');
 					outToServer.flush();
 

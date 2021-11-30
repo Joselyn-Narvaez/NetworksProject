@@ -24,19 +24,20 @@ class TCPServer extends Thread {
 			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 
+			System.out.println("Client " + clientNum + " >>> CONNECT >>> Open Connection Time: "
+								+ connectTime + " sec");
+			serverResponse = "Server >>> Successful connection...\n";
+			outToClient.writeBytes(serverResponse);
+			outToClient.flush();
+
 			// start accepting client requests through socket
 			while (true) {
 				// accept TCP client request until end request
 				clientSentence = inFromClient.readLine();
 
 				while ((clientSentence != null) && !(clientSentence.toUpperCase().equals("QUIT"))) {
-
-					if (clientSentence.toUpperCase().equals("CONNECT")) {
-						System.out.println("Client " + clientNum + " >>> CONNECT >>> Open Connection Time: "
-								+ connectTime + " sec");
-						serverResponse = "Server >>> Successful connection...\n";
-
-					} else if (clientSentence.toUpperCase().contains("MATH")) {
+					// If the client sends in a math request
+					if (clientSentence.toUpperCase().contains("MATH")) {
 						request = clientSentence.split("\\.");
 						solution = mathFunction(request[1]);
 						System.out.println(
@@ -44,6 +45,7 @@ class TCPServer extends Thread {
 						serverResponse = "Server >>> Solution: " + solution + "\n";
 
 					}
+					// If the client does not send a math request, this is the default response
 					else {
 						serverResponse = clientSentence.toUpperCase() + '\n';
 					}
@@ -86,28 +88,28 @@ class TCPServer extends Thread {
 			// Then we set the value to the left of the split to be the first integer and the value to the right to be the second and then do the operation.
             if (mathRequest.contains("+")) {
                 String[] splitExpr = mathRequest.split("\\+");
-                a = Integer.valueOf(splitExpr[0]);
-                b = Integer.valueOf(splitExpr[1]);
+                a = Integer.valueOf(splitExpr[0].trim());
+                b = Integer.valueOf(splitExpr[1].trim());
                 return a + b;
             } else if (mathRequest.contains("-")) {
                 String[] splitExpr = mathRequest.split("-");
-                a = Integer.valueOf(splitExpr[0]);
-                b = Integer.valueOf(splitExpr[1]);
+                a = Integer.valueOf(splitExpr[0].trim());
+                b = Integer.valueOf(splitExpr[1].trim());
                 return a - b;
             } else if (mathRequest.contains("*")) {
                 String[] splitExpr = mathRequest.split("\\*");
-                a = Integer.valueOf(splitExpr[0]);
-                b = Integer.valueOf(splitExpr[1]);
+                a = Integer.valueOf(splitExpr[0].trim());
+                b = Integer.valueOf(splitExpr[1].trim());
                 return a * b;
             } else if (mathRequest.contains("/")) {
                 String[] splitExpr = mathRequest.split("/");
-                a = Integer.valueOf(splitExpr[0]);
-                b = Integer.valueOf(splitExpr[1]);
+                a = Integer.valueOf(splitExpr[0].trim());
+                b = Integer.valueOf(splitExpr[1].trim());
                 return a / b;
             } else if (mathRequest.contains("^")) {
                 String[] splitExpr = mathRequest.split("\\^");
-                a = Integer.valueOf(splitExpr[0]);
-                b = Integer.valueOf(splitExpr[1]);
+                a = Integer.valueOf(splitExpr[0].trim());
+                b = Integer.valueOf(splitExpr[1].trim());
                 return (int) Math.pow(a, b);
             }
 
